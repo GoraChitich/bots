@@ -22,7 +22,7 @@ export const useStyles = makeStyles({
     background: '#fff',
     marginLeft: '5px',
     height: '36px',
-    marginRight: '50px',
+    marginRight: '20px',
     '& fieldset': {
       height: '42px',
     },
@@ -35,6 +35,10 @@ export const useStyles = makeStyles({
     textTransform: 'none',
     height: '36p',
     minWidth: '105px',
+  },
+  sec: {
+    width: '20px',
+    minWidth: '45px',
   },
 });
 

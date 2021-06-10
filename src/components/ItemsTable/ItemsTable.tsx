@@ -169,7 +169,7 @@ const ItemsTable: React.FC<any> = ({
               .map((row: any, index: number) => (
                 <TableRow key={row.assetId}>
                   <TableCell align="center">
-                    {index + 1}
+                    {(page - 1) * show + index + 1}
                   </TableCell>
                   <TableCell>
                     {row.accountSeller || ''}
@@ -179,22 +179,28 @@ const ItemsTable: React.FC<any> = ({
                       <a
                         target="_blank"
                         rel="noreferrer"
-                        href={`https://market.csgo.com/?s=price&r=&q=&engName=&search=${row.hashName}`}
+                        href={`https://market.csgo.com/?s=price&r=&q=&search=${row.hashName}`}
                       >
                         EN
                       </a>
                       <a
                         target="_blank"
                         rel="noreferrer"
-                        href={`https://market.csgo.com/?s=price&r=&q=&ruName=&search=${row.hashName}`}
+                        href={`https://market.csgo.com/?s=price&r=&q=&search=${row.ruHashName}`}
                       >
                         RU
                       </a>
                     </LinksWrapper>
                     <Tooltip title={row.hashName}>
-                      <ItemName>
-                        {row.hashName}
-                      </ItemName>
+                      <LinksWrapper className={classes.linkLeft}>
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={`https://market.csgo.com/item/${row.tmId}`}
+                        >
+                          {row.hashName}
+                        </a>
+                      </LinksWrapper>
                     </Tooltip>
                   </TableCell>
                   <TableCell align="center">

@@ -71,6 +71,10 @@ export const useStyles = makeStyles({
       padding: '5px 30px 5px 10px',
     },
   },
+  linkLeft: {
+    justifyContent: 'left',
+    display: 'flex',
+  },
 });
 
 export const TableCellContentWrapper = styled.div`

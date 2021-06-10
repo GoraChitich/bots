@@ -174,6 +174,9 @@ const Settings: React.FC = () => {
             onChange={changeHandler}
             type="tel"
           />
+          <Label className={classes.sec}>
+            sec
+          </Label>
           <Button
             className={classes.button}
             color="primary"
@@ -197,6 +200,9 @@ const Settings: React.FC = () => {
             onChange={changeHandler}
             type="tel"
           />
+          <Label className={classes.sec}>
+            sec
+          </Label>
           <Button
             className={classes.button}
             color="primary"
@@ -220,6 +226,9 @@ const Settings: React.FC = () => {
             onChange={changeHandler}
             type="tel"
           />
+          <Label className={classes.sec}>
+            sec
+          </Label>
           <Button
             className={classes.button}
             color="primary"
