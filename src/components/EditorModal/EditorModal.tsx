@@ -49,7 +49,7 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
   const sendBots = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/api/add/batchAccounts`,
+      const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/add/batchAccounts`,
         botsString,
         {
           headers: {

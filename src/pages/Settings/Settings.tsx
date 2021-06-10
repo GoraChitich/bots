@@ -38,7 +38,7 @@ const Settings: React.FC = () => {
   const getSettings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/api/settings`, {
+      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/settings`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

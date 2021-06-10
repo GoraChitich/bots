@@ -21,7 +21,7 @@ const StyledSwitch: React.FC<{id: string, checked: boolean}> = ({ id, checked })
     setEnabled(!enabled);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${process.env.REACT_APP_SERVER}/api/enableAccountById`,
+      await axios.post(`${process.env.REACT_APP_SERVER}/enableAccountById`,
         JSON.stringify({ id, enable: !enabled }),
         {
           headers: {

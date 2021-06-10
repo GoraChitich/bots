@@ -35,7 +35,7 @@ const Login: React.FC = () => {
 
     try {
       setLoading(true);
-      const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/api/login`, JSON.stringify({
+      const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/login`, JSON.stringify({
         username: formData.username,
         password: formData.password,
       }), {

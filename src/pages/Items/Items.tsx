@@ -25,7 +25,7 @@ const Items: React.FC = () => {
   const getItems = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/api/allItems`, {
+      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/allItems`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

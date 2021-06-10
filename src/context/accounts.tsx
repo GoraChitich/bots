@@ -21,7 +21,7 @@ export const AccountsContextProvider: React.FC = ({ children }) => {
     }
 
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/api/getSellerAccounts`, {
+      const { data } = await axios.get(`${process.env.REACT_APP_SERVER}/getSellerAccounts`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
