@@ -42,6 +42,12 @@ const BotSearch: React.FC<any> = ({
     }
   };
 
+  const filterBotHandlerText = (event: any) => {
+    filterBotHandler(event, event.target.value ? { title: event.target.value } : null);
+  };
+
+  console.log(options);
+  console.log(items);
   return (
     <Autocomplete
       id="bot-search"
@@ -53,6 +59,7 @@ const BotSearch: React.FC<any> = ({
           {...params}
           className={classes.textField}
           variant="outlined"
+          onChange={filterBotHandlerText}
         />
       )}
     />

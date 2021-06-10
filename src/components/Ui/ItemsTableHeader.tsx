@@ -68,12 +68,14 @@ const ItemsTableHeader: React.FC<any> = ({
     fetchItems();
   };
 
+  console.log(items);
   const filterByDate = () => {
     const from = dayjs(startDate || '').unix();
     const to = dayjs(endDate || '').unix();
 
     setFilteredItems(items.filter((item: any) => {
-      if (dayjs(item.createdDate).unix() >= from && dayjs(item.createdDate).unix() <= to) {
+      if (dayjs(item.createdDate).unix() >= from
+        && dayjs(item.createdDate).unix() <= (to + 60 * 60 * 24)) {
         return true;
       }
       return false;
@@ -81,7 +83,15 @@ const ItemsTableHeader: React.FC<any> = ({
   };
 
   const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(event.target.value);
+    const searchText: string = event.target.value;
+    setSearchString(searchText);
+    setFilteredItems(
+      items.filter(
+        (item: any) => (
+          item.ruHashName && item.ruHashName.toUpperCase().indexOf(searchText.toUpperCase()) >= 0)
+          || (item.hashName && item.hashName.toUpperCase().indexOf(searchText.toUpperCase()) >= 0),
+      ),
+    );
   };
 
   return (
@@ -92,7 +102,7 @@ const ItemsTableHeader: React.FC<any> = ({
         variant="outlined"
         value={searchString}
         onChange={searchHandler}
-        placeholder="engName,ruName;assetId"
+        placeholder="engName,ruName"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

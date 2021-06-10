@@ -43,6 +43,12 @@ const ItemsTable: React.FC<any> = ({
     setPage(value);
   };
 
+  const handlerChangePageInput = (event: any) => {
+    if (Number(event.target.value) > 0) {
+      setPage(event.target.value);
+    }
+  };
+
   const handlerShowItems = (event: React.ChangeEvent<{ value: unknown }>) => {
     setShow(Number(event.target.value));
     getItems();
@@ -173,14 +179,14 @@ const ItemsTable: React.FC<any> = ({
                       <a
                         target="_blank"
                         rel="noreferrer"
-                        href={`https://market.csgo.com/?s=price&r=&q=&search=${row.hashName}`}
+                        href={`https://market.csgo.com/?s=price&r=&q=&engName=&search=${row.hashName}`}
                       >
                         EN
                       </a>
                       <a
                         target="_blank"
                         rel="noreferrer"
-                        href={`https://market.csgo.com/?s=price&r=&q=&search=${row.hashName}`}
+                        href={`https://market.csgo.com/?s=price&r=&q=&ruName=&search=${row.hashName}`}
                       >
                         RU
                       </a>
@@ -192,12 +198,12 @@ const ItemsTable: React.FC<any> = ({
                     </Tooltip>
                   </TableCell>
                   <TableCell align="center">
-                    { new Intl.NumberFormat('ru-RU', {
+                    {new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'RUB',
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.googlePrice))}{' '}
-                    ({ new Intl.NumberFormat('ru-RU', {
+                    ({new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'USD',
                       currencyDisplay: 'narrowSymbol',
@@ -207,12 +213,12 @@ const ItemsTable: React.FC<any> = ({
                     {dayjs(row.createdDate).format('DD MMM HH:mm')}
                   </TableCell>
                   <TableCell align="center">
-                    { new Intl.NumberFormat('ru-RU', {
+                    {new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'RUB',
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.offeredPrice))}{' '}
-                    ({ new Intl.NumberFormat('ru-RU', {
+                    ({new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'USD',
                       currencyDisplay: 'narrowSymbol',
@@ -220,12 +226,12 @@ const ItemsTable: React.FC<any> = ({
                   </TableCell>
                   <TableCell align="center">OfferedP.T</TableCell>
                   <TableCell align="center">
-                    { new Intl.NumberFormat('ru-RU', {
+                    {new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'RUB',
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.steamPrice))}{' '}
-                    ({ new Intl.NumberFormat('ru-RU', {
+                    ({new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
                       currency: 'USD',
                       currencyDisplay: 'narrowSymbol',
@@ -241,12 +247,12 @@ const ItemsTable: React.FC<any> = ({
                   </TableCell>
                   <TableCell align="center">Max.time</TableCell>
                   <TableCell align="center">
-                    none
+                    {row.holdOff ? dayjs(row.holdOff).format('DD MMM HH:mm') : '-'}
                   </TableCell>
                   <TableCell align="center">
                     {row.status}
                   </TableCell>
-                  <TableCell align="center">Place</TableCell>
+                  <TableCell align="center">{row.places}</TableCell>
                   <TableCell align="center">
                     {row.assetId}
                   </TableCell>
@@ -265,6 +271,7 @@ const ItemsTable: React.FC<any> = ({
             type="tel"
             className={classes.pagesInput}
             value={page}
+            onChange={handlerChangePageInput}
           />
           <InputTitle>
             страница.

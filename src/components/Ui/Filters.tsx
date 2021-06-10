@@ -188,7 +188,7 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 onChange={handlerChangePlace}
               />
               )}
-            label={`Drive(${calculateItem(items, 'place', 'drive')})`}
+            label={`Google(${calculateItem(items, 'place', 'drive')})`}
             labelPlacement="end"
           />
           <FormControlLabel

@@ -123,6 +123,7 @@ const CustomDatePicker: React.FC<any> = ({
         <DatePicker
           // eslint-disable-next-line
           selectsRange={true}
+          dateFormat="dd-MM-yy"
           startDate={startDate}
           endDate={endDate}
           onChange={(update) => {
