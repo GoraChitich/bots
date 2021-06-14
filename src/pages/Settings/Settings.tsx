@@ -113,7 +113,7 @@ const Settings: React.FC = () => {
             name="minProfit"
             className={classes.textField}
             variant="outlined"
-            value={formData.minProfit}
+            value={formData.minProfit / 100}
             onChange={changeHandler}
             type="tel"
           />
@@ -125,7 +125,7 @@ const Settings: React.FC = () => {
             name="maxProfit"
             className={classes.textField}
             variant="outlined"
-            value={formData.maxProfit}
+            value={formData.maxProfit / 100}
             onChange={changeHandler}
             type="tel"
           />

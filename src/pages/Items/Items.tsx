@@ -15,10 +15,11 @@ import {
 } from './styles';
 // Context
 import { AccountsContext } from 'context/accounts';
+import mockup from './mockup.json';
 
 const Items: React.FC = () => {
   const { accounts } = useContext(AccountsContext);
-  const [options, setOptions] = useState<{title: string}[]>([]);
+  const [options, setOptions] = useState<{ title: string }[]>([]);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -31,6 +32,9 @@ const Items: React.FC = () => {
         },
       });
 
+      // setItems(mockup);
+      // console.log('mockup!!! ');
+      console.log(data);
       setItems(data);
       setFilteredItems(data);
     } catch (error) {

@@ -27,6 +27,7 @@ import {
   ItemName,
   TableCellContentWrapper,
 } from './styles';
+import { TableSortLabel } from '@material-ui/core';
 
 const ItemsTable: React.FC<any> = ({
   items,
@@ -88,8 +89,16 @@ const ItemsTable: React.FC<any> = ({
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  C.Date
-                  <UnfoldMoreIcon />
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => { console.log('sort'); }}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    C.Date
+
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">

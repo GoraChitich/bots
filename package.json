@@ -1,6 +1,5 @@
 {
   "name": "bots-frontend",
-  "homepage": "https://gorachitich.github.io/bots",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

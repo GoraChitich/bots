@@ -5,6 +5,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core';
+import { filterNames } from './FilterNames';
 
 const useStyles = makeStyles({
   container: {
@@ -52,6 +53,9 @@ const useStyles = makeStyles({
       },
     },
   },
+  formLabelFirst: {
+    width: '280px',
+  },
 });
 
 const FormLabel = styled.p`
@@ -67,7 +71,8 @@ const calculateItem = (items: any, field: string, value: string) => {
   // eslint-disable-next-line
   for (let i = 0; i < items.length; i++) {
     // eslint-disable-next-line
-    if (items[i][field] === value && items[i][field] !== undefined) {
+    // @ts-ignore
+    if (items[i][field] === filterNames[String(value)] && items[i][field] !== undefined) {
       count += 1;
     }
   }
@@ -75,7 +80,9 @@ const calculateItem = (items: any, field: string, value: string) => {
   return count;
 };
 
-const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
+const Filters: React.FC<any> = ({
+  items, setFilteredItems, filteredItems, fetchItems,
+}) => {
   const classes = useStyles();
   const [allPlace, setAllPlace] = useState(true);
   const [allStatus, setAllStatus] = useState(true);
@@ -141,23 +148,47 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
   const handlerChangePlace = (event: any) => {
     setAllPlace(false);
     setPlace({ ...place, [event.target.name]: event.target.checked });
-    setFilteredItems(items.filter((item: any) => item.place === event.target.name));
+    // @ts-ignore
+    setFilteredItems(items.filter((item: any) => item.place === filterNames[event.target.name]));
   };
 
   const handlerChangeStatus = (event: any) => {
     setAllStatus(false);
     setStatus({ ...status, [event.target.name]: event.target.checked });
-    setFilteredItems(items.filter((item: any) => item.status === event.target.name));
+    // @ts-ignore
+    setFilteredItems(items.filter((item: any) => item.status === filterNames[event.target.name]));
   };
 
   const handlerChangeHold = (event: any) => {
     setAllStatus(false);
     setHold({ ...hold, [event.target.name]: event.target.checked });
-    setFilteredItems(items.filter((item: any) => item.hold === event.target.name));
+    // @ts-ignore
+    setFilteredItems(items.filter((item: any) => item.hold === filterNames[event.target.name]));
   };
 
   return (
     <div className={classes.container}>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel className={classes.formLabelFirst}>Count of elements without filters:</FormLabel>
+        <FormGroup className={classes.formGroup}>
+          <FormControlLabel
+            className={classes.formControlLabel}
+            value={`All(${items.length})`}
+            control={(
+              <Checkbox
+                checked={allPlace}
+                color="primary"
+                name="all"
+                className={classes.checkbox}
+                onChange={handlerChangeAll}
+              />
+            )}
+            label={`All(${items.length})`}
+            labelPlacement="end"
+          />
+        </FormGroup>
+      </FormControl>
+
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel>Place:</FormLabel>
         <FormGroup className={classes.formGroup}>
@@ -172,13 +203,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeAll}
               />
-              )}
-            label={`All(${items.length})`}
+            )}
+            label="All"
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Drive(${calculateItem(items, 'place', 'drive')})`}
+            value={`Drive(${calculateItem(filteredItems, 'place', 'drive')})`}
             control={(
               <Checkbox
                 checked={place.drive}
@@ -187,13 +218,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangePlace}
               />
-              )}
-            label={`Google(${calculateItem(items, 'place', 'drive')})`}
+            )}
+            label={`Google(${calculateItem(filteredItems, 'place', 'drive')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`BadName(${calculateItem(items, 'place', 'badName')})`}
+            value={`BadName(${calculateItem(filteredItems, 'place', 'badName')})`}
             control={(
               <Checkbox
                 checked={place.badname}
@@ -202,13 +233,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangePlace}
               />
-              )}
-            label={`BadName(${calculateItem(items, 'place', 'badName')})`}
+            )}
+            label={`BadName(${calculateItem(filteredItems, 'place', 'badName')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Not determined(${calculateItem(items, 'place', 'notdetermined')})`}
+            value={`notdetermined(${calculateItem(filteredItems, 'place', 'notdetermined')})`}
             control={(
               <Checkbox
                 checked={place.notdetermined}
@@ -217,8 +248,8 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangePlace}
               />
-              )}
-            label={`Not determined(${calculateItem(items, 'place', 'notdetermined')})`}
+            )}
+            label={`Not determined(${calculateItem(filteredItems, 'place', 'notdetermined')})`}
             labelPlacement="end"
           />
         </FormGroup>
@@ -238,12 +269,12 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 onChange={handlerStatusChange}
               />
             )}
-            label={`All(${items.length})`}
+            label="All"
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`New(${calculateItem(items, 'status', 'new')})`}
+            value={`New(${calculateItem(filteredItems, 'status', 'new')})`}
             control={(
               <Checkbox
                 checked={status.new}
@@ -252,13 +283,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`New(${calculateItem(items, 'status', 'new')})`}
+            )}
+            label={`New(${calculateItem(filteredItems, 'status', 'new')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Partly(${calculateItem(items, 'status', 'partly')})`}
+            value={`Partly(${calculateItem(filteredItems, 'status', 'partly')})`}
             control={(
               <Checkbox
                 checked={status.partly}
@@ -267,13 +298,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Partly(${calculateItem(items, 'status', 'partly')})`}
+            )}
+            label={`Partly(${calculateItem(filteredItems, 'status', 'partly')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Wait(${calculateItem(items, 'status', 'wait')})`}
+            value={`Wait(${calculateItem(filteredItems, 'status', 'wait')})`}
             control={(
               <Checkbox
                 checked={status.wait}
@@ -282,13 +313,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Wait(${calculateItem(items, 'status', 'wait')})`}
+            )}
+            label={`Wait(${calculateItem(filteredItems, 'status', 'wait')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Ready(${calculateItem(items, 'status', 'ready')})`}
+            value={`Ready(${calculateItem(filteredItems, 'status', 'ready')})`}
             control={(
               <Checkbox
                 checked={status.ready}
@@ -297,13 +328,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Ready(${calculateItem(items, 'status', 'ready')})`}
+            )}
+            label={`Ready(${calculateItem(filteredItems, 'status', 'ready')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Offered(${calculateItem(items, 'status', 'offered')})`}
+            value={`Offered(${calculateItem(filteredItems, 'status', 'offered')})`}
             control={(
               <Checkbox
                 checked={status.offered}
@@ -312,13 +343,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Offered(${calculateItem(items, 'status', 'offered')})`}
+            )}
+            label={`Offered(${calculateItem(filteredItems, 'status', 'offered')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Send(${calculateItem(items, 'status', 'send')})`}
+            value={`Send(${calculateItem(filteredItems, 'status', 'send')})`}
             control={(
               <Checkbox
                 checked={status.send}
@@ -327,13 +358,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Send(${calculateItem(items, 'status', 'send')})`}
+            )}
+            label={`Send(${calculateItem(filteredItems, 'status', 'send')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Send(${calculateItem(items, 'status', 'sent')})`}
+            value={`Send(${calculateItem(filteredItems, 'status', 'sent')})`}
             control={(
               <Checkbox
                 checked={status.sent}
@@ -342,13 +373,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Send(${calculateItem(items, 'status', 'sent')})`}
+            )}
+            label={`Send(${calculateItem(filteredItems, 'status', 'sent')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Selled(${calculateItem(items, 'status', 'selled')})`}
+            value={`Selled(${calculateItem(filteredItems, 'status', 'selled')})`}
             control={(
               <Checkbox
                 checked={status.selled}
@@ -357,13 +388,13 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`Selled(${calculateItem(items, 'status', 'selled')})`}
+            )}
+            label={`Selled(${calculateItem(filteredItems, 'status', 'selled')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`NotAtSteamInv(${calculateItem(items, 'status', 'notatsteam')})`}
+            value={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatsteam')})`}
             control={(
               <Checkbox
                 checked={status.notatsteam}
@@ -372,8 +403,8 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
-              )}
-            label={`NotAtSteamInv(${calculateItem(items, 'status', 'notatsteam')})`}
+            )}
+            label={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatsteam')})`}
             labelPlacement="end"
           />
         </FormGroup>
@@ -393,12 +424,12 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 onChange={handlerHoldChange}
               />
             )}
-            label={`All(${items.length})`}
+            label="All"
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`NotAtHold(${calculateItem(items, 'hold', 'notathold')})`}
+            value={`NotAtHold(${calculateItem(filteredItems, 'hold', 'notathold')})`}
             control={(
               <Checkbox
                 checked={hold.notathold}
@@ -408,12 +439,12 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 onChange={handlerChangeHold}
               />
             )}
-            label={`NotAtHold(${calculateItem(items, 'hold', 'notathold')})`}
+            label={`NotAtHold(${calculateItem(filteredItems, 'hold', 'notathold')})`}
             labelPlacement="end"
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Hold(${calculateItem(items, 'hold', 'hold')})`}
+            value={`Hold(${calculateItem(filteredItems, 'hold', 'hold')})`}
             control={(
               <Checkbox
                 checked={hold.hold}
@@ -423,7 +454,7 @@ const Filters: React.FC<any> = ({ items, setFilteredItems, fetchItems }) => {
                 onChange={handlerChangeHold}
               />
             )}
-            label={`Hold(${calculateItem(items, 'hold', 'hold')})`}
+            label={`Hold(${calculateItem(filteredItems, 'hold', 'hold')})`}
             labelPlacement="end"
           />
         </FormGroup>
