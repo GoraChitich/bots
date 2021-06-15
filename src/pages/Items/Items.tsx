@@ -22,6 +22,7 @@ const Items: React.FC = () => {
   const [options, setOptions] = useState<{ title: string }[]>([]);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [sort, setSort] = useState({});
 
   const getItems = async () => {
     try {
@@ -50,6 +51,15 @@ const Items: React.FC = () => {
     const optionsArray = accounts.map((item: any) => ({ title: item.login, value: item.login }));
     setOptions(optionsArray);
   }, [accounts]);
+
+  useEffect(() => {
+    const _filteredItems = [...filteredItems];
+    for (const k in sort) {
+      // @ts-ignore
+      _filteredItems.sort((a, b) => (sort[k] === 'asc' ? a[k] - b[k] : b[k] - a[k]));
+      setFilteredItems(_filteredItems);
+    }
+  }, [sort]);
 
   return (
     <Container>
@@ -83,6 +93,8 @@ const Items: React.FC = () => {
         filteredItems={filteredItems}
         setFilteredItems={setFilteredItems}
         getItems={getItems}
+        sort={sort}
+        setSort={setSort}
       />
     </Container>
   );

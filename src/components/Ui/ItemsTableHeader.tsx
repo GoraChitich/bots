@@ -57,6 +57,8 @@ const ItemsTableHeader: React.FC<any> = ({
   items,
   fetchItems,
   setFilteredItems,
+  sort,
+  setSort,
 }) => {
   const classes = useStyles();
   const [searchString, setSearchString] = useState<string>('');

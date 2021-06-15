@@ -34,6 +34,8 @@ const ItemsTable: React.FC<any> = ({
   filteredItems,
   getItems,
   setFilteredItems,
+  sort,
+  setSort,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
@@ -48,6 +50,18 @@ const ItemsTable: React.FC<any> = ({
     if (Number(event.target.value) > 0) {
       setPage(event.target.value);
     }
+  };
+
+  const handlerChangeSort = (field: any) => {
+    const copy = { sort };
+    let currentSort = 'asc';
+    if (sort[field] === 'asc') {
+      currentSort = 'desc';
+    }
+    // @ts-ignore
+    copy[field] = currentSort;
+    console.log(copy);
+    setSort(copy);
   };
 
   const handlerShowItems = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -83,8 +97,20 @@ const ItemsTable: React.FC<any> = ({
               <TableCell align="center">Items</TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  G.Price
-                  <UnfoldMoreIcon />
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('googlePrice')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    G.Price
+                  </TableSortLabel>
+                </TableCellContentWrapper>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellContentWrapper>
+                  C.Date
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
@@ -93,48 +119,55 @@ const ItemsTable: React.FC<any> = ({
                     active
                     hideSortIcon
                     // direction="asc"
-                    onClick={() => { console.log('sort'); }}
+                    onClick={() => handlerChangeSort('offeredPrice')}
                     IconComponent={UnfoldMoreIcon}
                   >
-                    C.Date
-
+                    OfferedP
                   </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  OfferedP
-                  <UnfoldMoreIcon />
-                </TableCellContentWrapper>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellContentWrapper>
                   OfferedP.T
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  Steam.P
-                  <UnfoldMoreIcon />
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('steamPrice')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    Steam.P
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
                   S.time
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  Min.profit
-                  <UnfoldMoreIcon />
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('minProfit')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    Min.profit
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
                   Min.time
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
@@ -146,13 +179,13 @@ const ItemsTable: React.FC<any> = ({
               <TableCell align="center">
                 <TableCellContentWrapper>
                   Max.time
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
                   Hold off
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">Status</TableCell>
@@ -160,13 +193,13 @@ const ItemsTable: React.FC<any> = ({
               <TableCell align="center">
                 <TableCellContentWrapper>
                   AssedId
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
                   D.discount
-                  <UnfoldMoreIcon />
+                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">U.Date</TableCell>
