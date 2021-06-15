@@ -94,7 +94,7 @@ const ItemsTable: React.FC<any> = ({
                 №
               </TableCell>
               <TableCell align="center">Bot</TableCell>
-              <TableCell align="center">Items</TableCell>
+              <TableCell align="center" className={classes.tableItems}>Items</TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
                   <TableSortLabel
@@ -108,11 +108,7 @@ const ItemsTable: React.FC<any> = ({
                   </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
-              <TableCell align="center">
-                <TableCellContentWrapper>
-                  C.Date
-                </TableCellContentWrapper>
-              </TableCell>
+
               <TableCell align="center">
                 <TableCellContentWrapper>
                   <TableSortLabel
@@ -128,10 +124,48 @@ const ItemsTable: React.FC<any> = ({
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  OfferedP.T
-                  {/* <UnfoldMoreIcon /> */}
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('offeredPercent')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    Offered %
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
+              <TableCell align="center">
+                <TableCellContentWrapper>
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('competitorPrice')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    CompetitorP
+                  </TableSortLabel>
+                </TableCellContentWrapper>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellContentWrapper>
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('ompetitorProfit')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    Competitor %
+                  </TableSortLabel>
+                </TableCellContentWrapper>
+              </TableCell>
+              {/* <TableCell align="center">
+                <TableCellContentWrapper>
+                  OfferedP.T
+                </TableCellContentWrapper>
+              </TableCell> */}
               <TableCell align="center">
                 <TableCellContentWrapper>
                   <TableSortLabel
@@ -145,12 +179,11 @@ const ItemsTable: React.FC<any> = ({
                   </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <TableCellContentWrapper>
                   S.time
-                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
-              </TableCell>
+              </TableCell> */}
               <TableCell align="center">
                 <TableCellContentWrapper>
                   <TableSortLabel
@@ -164,24 +197,22 @@ const ItemsTable: React.FC<any> = ({
                   </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <TableCellContentWrapper>
                   Min.time
-                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
-              </TableCell>
+              </TableCell> */}
               <TableCell align="center">
                 <TableCellContentWrapper>
                   Max.profit
                   <UnfoldMoreIcon />
                 </TableCellContentWrapper>
               </TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <TableCellContentWrapper>
                   Max.time
-                  {/* <UnfoldMoreIcon /> */}
                 </TableCellContentWrapper>
-              </TableCell>
+              </TableCell> */}
               <TableCell align="center">
                 <TableCellContentWrapper>
                   Hold off
@@ -200,6 +231,11 @@ const ItemsTable: React.FC<any> = ({
                 <TableCellContentWrapper>
                   D.discount
                   {/* <UnfoldMoreIcon /> */}
+                </TableCellContentWrapper>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellContentWrapper>
+                  C.Date
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">U.Date</TableCell>
@@ -257,9 +293,7 @@ const ItemsTable: React.FC<any> = ({
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.googlePrice) / 70)})
                   </TableCell>
-                  <TableCell align="center">
-                    {dayjs(row.createdDate).format('DD MMM HH:mm')}
-                  </TableCell>
+
                   <TableCell align="center">
                     {new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
@@ -272,7 +306,25 @@ const ItemsTable: React.FC<any> = ({
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.offeredPrice) / 70)})
                   </TableCell>
-                  <TableCell align="center">OfferedP.T</TableCell>
+                  <TableCell align="center">
+                    {row.offeredPercent}
+                  </TableCell>
+                  <TableCell align="center">
+                    {new Intl.NumberFormat('ru-RU', {
+                      style: 'currency',
+                      currency: 'RUB',
+                      currencyDisplay: 'narrowSymbol',
+                    }).format(Number(row.competitorPrice))}{' '}
+                    ({new Intl.NumberFormat('ru-RU', {
+                      style: 'currency',
+                      currency: 'USD',
+                      currencyDisplay: 'narrowSymbol',
+                    }).format(Number(row.competitorPrice) / 70)})
+                  </TableCell>
+                  <TableCell align="center">
+                    {row.competitorPercent}
+                  </TableCell>
+                  {/* <TableCell align="center">OfferedP.T</TableCell> */}
                   <TableCell align="center">
                     {new Intl.NumberFormat('ru-RU', {
                       style: 'currency',
@@ -285,15 +337,15 @@ const ItemsTable: React.FC<any> = ({
                       currencyDisplay: 'narrowSymbol',
                     }).format(Number(row.steamPrice) / 70)})
                   </TableCell>
-                  <TableCell align="center">S.time</TableCell>
+                  {/* <TableCell align="center">S.time</TableCell> */}
                   <TableCell align="center">
                     {row.minProfit}
                   </TableCell>
-                  <TableCell align="center">Min.time</TableCell>
+                  {/* <TableCell align="center">Min.time</TableCell> */}
                   <TableCell align="center">
                     {row.maxProfit}
                   </TableCell>
-                  <TableCell align="center">Max.time</TableCell>
+                  {/* <TableCell align="center">Max.time</TableCell> */}
                   <TableCell align="center">
                     {row.holdOff ? dayjs(row.holdOff).format('DD MMM HH:mm') : '-'}
                   </TableCell>
@@ -305,6 +357,9 @@ const ItemsTable: React.FC<any> = ({
                     {row.assetId}
                   </TableCell>
                   <TableCell align="center">D.discount</TableCell>
+                  <TableCell align="center">
+                    {dayjs(row.createdDate).format('DD HH:mm')}
+                  </TableCell>
                   <TableCell align="center">none</TableCell>
                 </TableRow>
               ))}

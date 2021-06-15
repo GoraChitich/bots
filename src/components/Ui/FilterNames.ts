@@ -14,4 +14,5 @@ export const filterNames = {
   'drive': 'drive',
   'badname': 'badname',
   'notdetermined': 'not Determined',
+  'needtosend': 'needtosend',
 };

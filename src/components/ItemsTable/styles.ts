@@ -26,6 +26,9 @@ export const useStyles = makeStyles({
       fontSize: '12px',
     },
   },
+  tableItems: {
+    width: '300px',
+  },
   itemName: {
     overflow: 'hidden',
     maxWidth: '130px',
@@ -72,7 +75,7 @@ export const useStyles = makeStyles({
     },
   },
   linkLeft: {
-    justifyContent: 'left',
+    // justifyContent: 'left',
     display: 'flex',
   },
 });

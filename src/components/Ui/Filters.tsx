@@ -99,6 +99,7 @@ const Filters: React.FC<any> = ({
     ready: false,
     offered: false,
     send: false,
+    needtosend: false,
     sent: false,
     selled: false,
     notatsteam: false,
@@ -125,6 +126,7 @@ const Filters: React.FC<any> = ({
       || status.partly
       || status.ready
       || status.selled
+      || status.needtosend
       || status.send
       || status.sent
       || status.wait
@@ -169,8 +171,8 @@ const Filters: React.FC<any> = ({
   return (
     <div className={classes.container}>
       <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel className={classes.formLabelFirst}>Count of elements without filters:</FormLabel>
-        <FormGroup className={classes.formGroup}>
+        <FormLabel className={classes.formLabelFirst}>Total: {items.length}</FormLabel>
+        {/* <FormGroup className={classes.formGroup}>
           <FormControlLabel
             className={classes.formControlLabel}
             value={`All(${items.length})`}
@@ -186,7 +188,7 @@ const Filters: React.FC<any> = ({
             label={`All(${items.length})`}
             labelPlacement="end"
           />
-        </FormGroup>
+        </FormGroup> */}
       </FormControl>
 
       <FormControl component="fieldset" className={classes.formControl}>
@@ -349,17 +351,17 @@ const Filters: React.FC<any> = ({
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Send(${calculateItem(filteredItems, 'status', 'send')})`}
+            value={`Send(${calculateItem(filteredItems, 'status', 'needtosend')})`}
             control={(
               <Checkbox
-                checked={status.send}
+                checked={status.needtosend}
                 color="primary"
-                name="send"
+                name="needtosend"
                 className={classes.checkbox}
                 onChange={handlerChangeStatus}
               />
             )}
-            label={`Send(${calculateItem(filteredItems, 'status', 'send')})`}
+            label={`Need to send(${calculateItem(filteredItems, 'status', 'needtosend')})`}
             labelPlacement="end"
           />
           <FormControlLabel
