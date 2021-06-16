@@ -36,15 +36,25 @@ const ItemsTable: React.FC<any> = ({
   setFilteredItems,
   sort,
   setSort,
+  filter,
+  setFilter,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [show, setShow] = useState(100);
+  const [update, setUpdate] = useState(true);
 
   const handlerChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
+
+  const id = new Date();
+  useEffect(() => {
+    // console.log('items changed!');
+    // console.log(items[0].assetId);
+    setUpdate(!update);
+  }, [items]);
 
   const handlerChangePageInput = (event: any) => {
     if (Number(event.target.value) > 0) {
@@ -60,7 +70,7 @@ const ItemsTable: React.FC<any> = ({
     }
     // @ts-ignore
     copy[field] = currentSort;
-    console.log(copy);
+    // console.log(copy);
     setSort(copy);
   };
 
@@ -80,6 +90,8 @@ const ItemsTable: React.FC<any> = ({
         />
         <Filters
           items={items}
+          filter={filter}
+          setFilter={setFilter}
           filteredItems={filteredItems}
           setFilteredItems={setFilteredItems}
           fetchItems={getItems}
@@ -245,7 +257,7 @@ const ItemsTable: React.FC<any> = ({
             {filteredItems.slice((page - 1) * show,
               (page - 1) * show + show)
               .map((row: any, index: number) => (
-                <TableRow key={row.assetId}>
+                <TableRow key={`${row.assetId}-${id}`}>
                   <TableCell align="center">
                     {(page - 1) * show + index + 1}
                   </TableCell>

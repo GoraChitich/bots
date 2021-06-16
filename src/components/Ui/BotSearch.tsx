@@ -46,8 +46,8 @@ const BotSearch: React.FC<any> = ({
     filterBotHandler(event, event.target.value ? { title: event.target.value } : null);
   };
 
-  console.log(options);
-  console.log(items);
+  // console.log(options);
+  // console.log(items);
   return (
     <Autocomplete
       id="bot-search"

@@ -81,7 +81,7 @@ const calculateItem = (items: any, field: string, value: string) => {
 };
 
 const Filters: React.FC<any> = ({
-  items, setFilteredItems, filteredItems, fetchItems,
+  items, setFilteredItems, filteredItems, fetchItems, filter, setFilter,
 }) => {
   const classes = useStyles();
   const [allPlace, setAllPlace] = useState(true);
@@ -109,10 +109,26 @@ const Filters: React.FC<any> = ({
     hold: false,
   });
 
+  const changeFiter = (folder: string, part: string, value: boolean) => {
+    const _filter = { ...filter };
+    if (_filter[folder] === undefined) {
+      _filter[folder] = {};
+    }
+    if (part === 'all' && value === true) {
+      _filter[folder] = {};
+      _filter[folder][part] = value;
+    }
+    _filter[folder][part] = value;
+    setFilter(_filter);
+    console.log(_filter);
+  };
+
   const handlerChangeAll = () => {
     if (place.badname || place.drive || place.notdetermined) {
+      changeFiter('place', 'all', false);
       setAllPlace(false);
     } else {
+      changeFiter('place', 'all', !filter.place.all);
       setAllPlace(!allPlace);
       fetchItems();
     }
@@ -131,8 +147,11 @@ const Filters: React.FC<any> = ({
       || status.sent
       || status.wait
     ) {
+      changeFiter('status', 'all', false);
+      changeFiter('status', 'all', false);
       setAllStatus(false);
     } else {
+      changeFiter('status', 'all', !filter.status.all);
       setAllStatus(!allStatus);
       fetchItems();
     }
@@ -140,8 +159,10 @@ const Filters: React.FC<any> = ({
 
   const handlerHoldChange = () => {
     if (hold.hold || hold.notathold) {
+      changeFiter('hold', 'all', false);
       setAllHold(false);
     } else {
+      changeFiter('hold', 'all', !filter.hold.all);
       setAllHold(!allHold);
       fetchItems();
     }
@@ -149,23 +170,34 @@ const Filters: React.FC<any> = ({
 
   const handlerChangePlace = (event: any) => {
     setAllPlace(false);
+    changeFiter('place', 'all', false);
+
     setPlace({ ...place, [event.target.name]: event.target.checked });
+    changeFiter('place', event.target.name, event.target.checked);
+
     // @ts-ignore
-    setFilteredItems(items.filter((item: any) => item.place === filterNames[event.target.name]));
+    // setFilteredItems(items.filter((item: any) => item.place === filterNames[event.target.name]));
   };
 
   const handlerChangeStatus = (event: any) => {
     setAllStatus(false);
+    changeFiter('status', 'all', false);
+    changeFiter('status', event.target.name, event.target.checked);
+
     setStatus({ ...status, [event.target.name]: event.target.checked });
     // @ts-ignore
-    setFilteredItems(items.filter((item: any) => item.status === filterNames[event.target.name]));
+    // eslint-disable-next-line max-len
+    // setFilteredItems(items.filter((item: any) => item.status === filterNames[event.target.name]));
   };
 
   const handlerChangeHold = (event: any) => {
     setAllStatus(false);
+    changeFiter('status', 'all', false);
+    changeFiter('hold', event.target.name, event.target.checked);
+
     setHold({ ...hold, [event.target.name]: event.target.checked });
     // @ts-ignore
-    setFilteredItems(items.filter((item: any) => item.hold === filterNames[event.target.name]));
+    // setFilteredItems(items.filter((item: any) => item.hold === filterNames[event.target.name]));
   };
 
   return (

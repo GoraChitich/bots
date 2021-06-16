@@ -70,7 +70,7 @@ const ItemsTableHeader: React.FC<any> = ({
     fetchItems();
   };
 
-  console.log(items);
+  // console.log(items);
   const filterByDate = () => {
     const from = dayjs(startDate || '').unix();
     const to = dayjs(endDate || '').unix();
