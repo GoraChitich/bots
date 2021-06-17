@@ -116,7 +116,7 @@ export const InputTitle = styled.span`
 
 export const LinksWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: left;
   color: rgba(0, 123, 255, 1);
 
   a {
@@ -128,6 +128,9 @@ export const LinksWrapper = styled.div`
   }
 
   a:first-child {
+    margin-right: 5px;
+  }
+  a:nth-child(2) {
     margin-right: 5px;
   }
 `;

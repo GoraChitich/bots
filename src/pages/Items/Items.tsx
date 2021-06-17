@@ -16,6 +16,7 @@ import {
 // Context
 import { AccountsContext } from 'context/accounts';
 import mockup from './mockup.json';
+import dayjs from 'dayjs';
 
 const Items: React.FC = () => {
   const { accounts } = useContext(AccountsContext);
@@ -27,6 +28,9 @@ const Items: React.FC = () => {
   const [filter, setFilter] = useState({ place: { all: true }, hold: { all: true }, status: { all: true } });
   const [sort, setSort] = useState({});
   const [counter, setCounter] = useState(0);
+  const [accountSeller, setAccountSeller] = useState('');
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [searchString, setSearchString] = useState<string>('');
 
   // comparing two array: new and old
   const compareArrays = (arr1: any, arr2: any): boolean => {
@@ -56,6 +60,10 @@ const Items: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+
+    // const data = mockup;
+    // // @ts-ignore
+    // setNewData(data);
   };
 
   useEffect(() => {
@@ -103,8 +111,36 @@ const Items: React.FC = () => {
         _items = _items.filter((item: any) => arrFind.includes(item[kFilter]));
       }
     }
+    if (accountSeller) {
+      _items = _items.filter((item: any) => item.accountSeller === accountSeller);
+    }
+
+    if (dateRange[0] !== null && dateRange[1] !== null) {
+      const [startDate, endDate] = dateRange;
+
+      const from = dayjs(startDate || '').unix();
+      const to = dayjs(endDate || '').unix();
+      console.log(dateRange);
+      _items = _items.filter((item: any) => {
+        if (dayjs(item.createdDate).unix() >= from
+          && dayjs(item.createdDate).unix() <= (to + 60 * 60 * 24)) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    if (searchString) {
+      _items = _items.filter(
+        (item: any) => (
+          item.ruHashName && item.ruHashName.toUpperCase().indexOf(searchString.toUpperCase()) >= 0)
+          || (item.hashName && item.hashName.toUpperCase().indexOf(searchString.toUpperCase()) >= 0)
+          || (item.assetId && item.assetId.toUpperCase().indexOf(searchString.toUpperCase()) >= 0),
+      );
+    }
+
     setFilteredItems(_items);
-  }, [filter]);
+  }, [filter, accountSeller, dateRange, searchString]);
 
   useEffect(() => {
     getItems();
@@ -120,10 +156,18 @@ const Items: React.FC = () => {
   useEffect(() => {
     const _filteredItems = [...filteredItems];
     for (const k in sort) {
-      // @ts-ignore
-      _filteredItems.sort((a, b) => (sort[k] === 'asc' ? a[k] - b[k] : b[k] - a[k]));
-      setFilteredItems(_filteredItems);
+      _filteredItems.sort((a, b) => {
+        let a1: any = a[k];
+        let b1: any = b[k];
+        if (k === 'holdOff' || k === 'createdDate') {
+          a1 = a1 ? dayjs(a1) : new Date(0, 0, 0);
+          b1 = b1 ? dayjs(b1) : new Date(0, 0, 0);
+        }
+        // @ts-ignore
+        return (sort[k] === 'asc' ? 1 : -1) * (a1 - b1);
+      });
     }
+    setFilteredItems(_filteredItems);
   }, [sort]);
 
   return (
@@ -150,6 +194,8 @@ const Items: React.FC = () => {
             setItems={setItems}
             setFilteredItems={setFilteredItems}
             getItems={getItems}
+            accountSeller={accountSeller}
+            setAccountSeller={setAccountSeller}
           />
         </SearchWrapper>
       </Header>
@@ -162,6 +208,10 @@ const Items: React.FC = () => {
         getItems={getItems}
         sort={sort}
         setSort={setSort}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+        searchString={searchString}
+        setSearchString={setSearchString}
       />
     </Container>
   );

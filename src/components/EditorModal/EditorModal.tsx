@@ -28,8 +28,12 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
   const [botsString, setBotsString] = useState<string>('');
 
   const formatBots = () => {
+    console.log(bots);
     const newBots = bots.map((bot: any) => ({
+      id: bot.id,
+      balance: bot.balance,
       comment: bot.comment,
+      enabled: bot.enabled,
       login: bot.login,
       password: bot.password,
       steam_id: bot.steam_id,

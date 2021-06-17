@@ -30,19 +30,24 @@ const BotSearch: React.FC<any> = ({
   setItems,
   setFilteredItems,
   getItems,
+  accountSeller,
+  setAccountSeller,
 }) => {
   const classes = useStyles();
 
   const filterBotHandler = (event: any, value: any) => {
     if (value === null) {
+      setAccountSeller('');
       getItems();
     } else {
-      setItems(items.filter((item: any) => item.accountSeller === value.title));
-      setFilteredItems(items.filter((item: any) => item.accountSeller === value.title));
+      // setItems(items.filter((item: any) => item.accountSeller === value.title));
+      setAccountSeller(value.title);
+      // setFilteredItems(items.filter((item: any) => item.accountSeller === value.title));
     }
   };
 
   const filterBotHandlerText = (event: any) => {
+    setAccountSeller(event.target.value ? { title: event.target.value } : '');
     filterBotHandler(event, event.target.value ? { title: event.target.value } : null);
   };
 

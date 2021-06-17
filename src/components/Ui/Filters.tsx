@@ -88,7 +88,7 @@ const Filters: React.FC<any> = ({
   const [allStatus, setAllStatus] = useState(true);
   const [allHold, setAllHold] = useState(true);
   const [place, setPlace] = useState({
-    drive: false,
+    google: false,
     badname: false,
     notdetermined: false,
   });
@@ -124,48 +124,72 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerChangeAll = () => {
-    if (place.badname || place.drive || place.notdetermined) {
-      changeFiter('place', 'all', false);
-      setAllPlace(false);
-    } else {
-      changeFiter('place', 'all', !filter.place.all);
-      setAllPlace(!allPlace);
-      fetchItems();
+    // if (place.badname || place.drive || place.notdetermined) {
+    //   changeFiter('place', 'all', false);
+    //   setAllPlace(false);
+    // } else {
+    const newAll = !filter.place.all;
+    if (newAll) {
+      place.badname = false;
+      place.google = false;
+      place.notdetermined = false;
     }
+    changeFiter('place', 'all', newAll);
+    setAllPlace(!allPlace);
+    fetchItems();
+    // }
   };
 
   const handlerStatusChange = () => {
-    if (
-      status.new
-      || status.notatsteam
-      || status.offered
-      || status.partly
-      || status.ready
-      || status.selled
-      || status.needtosend
-      || status.send
-      || status.sent
-      || status.wait
-    ) {
-      changeFiter('status', 'all', false);
-      changeFiter('status', 'all', false);
-      setAllStatus(false);
-    } else {
-      changeFiter('status', 'all', !filter.status.all);
-      setAllStatus(!allStatus);
-      fetchItems();
+    // if (
+    //   status.new
+    //   || status.notatsteam
+    //   || status.offered
+    //   || status.partly
+    //   || status.ready
+    //   || status.selled
+    //   || status.needtosend
+    //   || status.send
+    //   || status.sent
+    //   || status.wait
+    // ) {
+    //   changeFiter('status', 'all', false);
+    //   changeFiter('status', 'all', false);
+    //   setAllStatus(false);
+    // } else {
+    const newAll = !filter.status.all;
+    if (newAll) {
+      status.new = false;
+      status.notatsteam = false;
+      status.offered = false;
+      status.partly = false;
+      status.ready = false;
+      status.selled = false;
+      status.needtosend = false;
+      status.send = false;
+      status.sent = false;
+      status.wait = false;
     }
+    changeFiter('status', 'all', newAll);
+    setAllStatus(newAll);
+    fetchItems();
+    // }
   };
 
   const handlerHoldChange = () => {
-    if (hold.hold || hold.notathold) {
-      changeFiter('hold', 'all', false);
-      setAllHold(false);
-    } else {
-      changeFiter('hold', 'all', !filter.hold.all);
-      setAllHold(!allHold);
-      fetchItems();
+    // if (hold.hold || hold.notathold) {
+    //   changeFiter('hold', 'all', false);
+    //   setAllHold(false);
+    // } else {
+    const newAll = !filter.hold.all;
+    if (newAll) {
+      hold.hold = false;
+      hold.notathold = false;
     }
+    changeFiter('hold', 'all', newAll);
+    setAllHold(newAll);
+    fetchItems();
+    // }
   };
 
   const handlerChangePlace = (event: any) => {
@@ -191,8 +215,8 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerChangeHold = (event: any) => {
-    setAllStatus(false);
-    changeFiter('status', 'all', false);
+    setAllHold(false);
+    changeFiter('hold', 'all', false);
     changeFiter('hold', event.target.name, event.target.checked);
 
     setHold({ ...hold, [event.target.name]: event.target.checked });
@@ -243,17 +267,17 @@ const Filters: React.FC<any> = ({
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Drive(${calculateItem(filteredItems, 'place', 'drive')})`}
+            value={`Google(${calculateItem(filteredItems, 'place', 'google')})`}
             control={(
               <Checkbox
-                checked={place.drive}
+                checked={place.google}
                 color="primary"
-                name="drive"
+                name="google"
                 className={classes.checkbox}
                 onChange={handlerChangePlace}
               />
             )}
-            label={`Google(${calculateItem(filteredItems, 'place', 'drive')})`}
+            label={`Google(${calculateItem(filteredItems, 'place', 'google')})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -268,7 +292,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerChangePlace}
               />
             )}
-            label={`BadName(${calculateItem(filteredItems, 'place', 'badName')})`}
+            label={`BadName(${calculateItem(filteredItems, 'place', 'badname')})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -398,7 +422,7 @@ const Filters: React.FC<any> = ({
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`Send(${calculateItem(filteredItems, 'status', 'sent')})`}
+            value={`Sent(${calculateItem(filteredItems, 'status', 'sent')})`}
             control={(
               <Checkbox
                 checked={status.sent}
@@ -408,7 +432,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerChangeStatus}
               />
             )}
-            label={`Send(${calculateItem(filteredItems, 'status', 'sent')})`}
+            label={`Sent(${calculateItem(filteredItems, 'status', 'sent')})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -428,7 +452,7 @@ const Filters: React.FC<any> = ({
           />
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatsteam')})`}
+            value={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatinventory')})`}
             control={(
               <Checkbox
                 checked={status.notatsteam}
@@ -438,7 +462,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerChangeStatus}
               />
             )}
-            label={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatsteam')})`}
+            label={`NotAtSteamInv(${calculateItem(filteredItems, 'status', 'notatinventory')})`}
             labelPlacement="end"
           />
         </FormGroup>

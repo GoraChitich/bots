@@ -38,6 +38,10 @@ const ItemsTable: React.FC<any> = ({
   setSort,
   filter,
   setFilter,
+  dateRange,
+  setDateRange,
+  searchString,
+  setSearchString,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
@@ -55,6 +59,10 @@ const ItemsTable: React.FC<any> = ({
     // console.log(items[0].assetId);
     setUpdate(!update);
   }, [items]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filteredItems]);
 
   const handlerChangePageInput = (event: any) => {
     if (Number(event.target.value) > 0) {
@@ -87,6 +95,10 @@ const ItemsTable: React.FC<any> = ({
           filteredItems={filteredItems}
           setFilteredItems={setFilteredItems}
           fetchItems={getItems}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          searchString={searchString}
+          setSearchString={setSearchString}
         />
         <Filters
           items={items}
@@ -227,8 +239,15 @@ const ItemsTable: React.FC<any> = ({
               </TableCell> */}
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  Hold off
-                  {/* <UnfoldMoreIcon /> */}
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('holdOff')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    Hold off
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
               <TableCell align="center">Status</TableCell>
@@ -247,10 +266,18 @@ const ItemsTable: React.FC<any> = ({
               </TableCell>
               <TableCell align="center">
                 <TableCellContentWrapper>
-                  C.Date
+                  <TableSortLabel
+                    active
+                    hideSortIcon
+                    // direction="asc"
+                    onClick={() => handlerChangeSort('createdDate')}
+                    IconComponent={UnfoldMoreIcon}
+                  >
+                    C.Date
+                  </TableSortLabel>
                 </TableCellContentWrapper>
               </TableCell>
-              <TableCell align="center">U.Date</TableCell>
+              {/* <TableCell align="center">U.Date</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody className={classes.tableBody}>
@@ -278,11 +305,11 @@ const ItemsTable: React.FC<any> = ({
                         rel="noreferrer"
                         href={`https://market.csgo.com/?s=price&r=&q=&search=${row.ruHashName}`}
                       >
-                        RU
+                        {'RU '}
                       </a>
-                    </LinksWrapper>
-                    <Tooltip title={row.hashName}>
-                      <LinksWrapper className={classes.linkLeft}>
+                      {/* </LinksWrapper> */}
+                      <Tooltip title={row.hashName}>
+                        {/* <LinksWrapper className={classes.linkLeft}> */}
                         <a
                           target="_blank"
                           rel="noreferrer"
@@ -290,8 +317,9 @@ const ItemsTable: React.FC<any> = ({
                         >
                           {row.hashName}
                         </a>
-                      </LinksWrapper>
-                    </Tooltip>
+                        {/* </LinksWrapper> */}
+                      </Tooltip>
+                    </LinksWrapper>
                   </TableCell>
                   <TableCell align="center">
                     {new Intl.NumberFormat('ru-RU', {
@@ -359,12 +387,12 @@ const ItemsTable: React.FC<any> = ({
                   </TableCell>
                   {/* <TableCell align="center">Max.time</TableCell> */}
                   <TableCell align="center">
-                    {row.holdOff ? dayjs(row.holdOff).format('DD MMM HH:mm') : '-'}
+                    {row.holdOff ? dayjs(row.holdOff).format('DD.MM') : '-'}
                   </TableCell>
                   <TableCell align="center">
                     {row.status}
                   </TableCell>
-                  <TableCell align="center">{row.places}</TableCell>
+                  <TableCell align="center">{row.place}</TableCell>
                   <TableCell align="center">
                     {row.assetId}
                   </TableCell>
@@ -372,7 +400,7 @@ const ItemsTable: React.FC<any> = ({
                   <TableCell align="center">
                     {dayjs(row.createdDate).format('DD HH:mm')}
                   </TableCell>
-                  <TableCell align="center">none</TableCell>
+                  {/* <TableCell align="center">none</TableCell> */}
                 </TableRow>
               ))}
           </TableBody>
@@ -394,7 +422,7 @@ const ItemsTable: React.FC<any> = ({
         </InputWrapper>
         <Pagination
           className={classes.pagination}
-          count={Math.ceil(items.length / show)}
+          count={Math.ceil(filteredItems.length / show)}
           page={page}
           defaultPage={1}
           variant="outlined"

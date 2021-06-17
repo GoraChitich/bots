@@ -46,8 +46,8 @@ const Settings: React.FC = () => {
       });
 
       setFormData({
-        maxProfit: data.maxProfit * 100,
-        minProfit: data.minProfit * 100,
+        maxProfit: data.maxProfit / 100,
+        minProfit: data.minProfit / 100,
         steamApiKey: data.steamApiKey || '',
         ping: data.ping || 60,
         test: data.test || 60,
@@ -66,8 +66,8 @@ const Settings: React.FC = () => {
       const token = localStorage.getItem('token');
       const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/edit/settings`,
         JSON.stringify({
-          maxProfit: Number(formData.maxProfit) / 100,
-          minProfit: Number(formData.minProfit) / 100,
+          maxProfit: Number(formData.maxProfit) * 100,
+          minProfit: Number(formData.minProfit) * 100,
           steamApiKey: formData.steamApiKey,
           ping: Number(formData.ping),
           test: Number(formData.test),
@@ -113,7 +113,7 @@ const Settings: React.FC = () => {
             name="minProfit"
             className={classes.textField}
             variant="outlined"
-            value={formData.minProfit / 100}
+            value={formData.minProfit}
             onChange={changeHandler}
             type="tel"
           />
@@ -125,7 +125,7 @@ const Settings: React.FC = () => {
             name="maxProfit"
             className={classes.textField}
             variant="outlined"
-            value={formData.maxProfit / 100}
+            value={formData.maxProfit}
             onChange={changeHandler}
             type="tel"
           />

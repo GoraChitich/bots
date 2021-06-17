@@ -132,9 +132,9 @@ const CustomDatePicker: React.FC<any> = ({
           }}
         />
       </PickerWrapper>
-      <ClearDate bg="rgba(0,123,255,1)" color="#fff" onClick={filter}>
+      {/* <ClearDate bg="rgba(0,123,255,1)" color="#fff" onClick={filter}>
         Filter
-      </ClearDate>
+      </ClearDate> */}
       <ClearDate onClick={clearHandler}>
         Clear date
       </ClearDate>
