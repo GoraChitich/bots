@@ -15,6 +15,7 @@ import {
 } from './styles';
 // Components
 import ConfirmModal from 'components/Ui/ConfirmModal';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   open: boolean
@@ -26,14 +27,15 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
   const classes = useStyles();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [botsString, setBotsString] = useState<string>('');
+  const history = useHistory();
 
   const formatBots = () => {
     console.log(bots);
     const newBots = bots.map((bot: any) => ({
-      id: bot.id,
-      balance: bot.balance,
+      // id: bot.id,
+      // balance: bot.balance,
       comment: bot.comment,
-      enabled: bot.enabled,
+      // enabled: bot.enabled,
       login: bot.login,
       password: bot.password,
       steam_id: bot.steam_id,
@@ -64,6 +66,12 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
       setOpenConfirm(false);
       setOpen(false);
     } catch (error) {
+      if (error.response.data.statusCode === 401) {
+        localStorage.setItem('token', 'null');
+        history.push('/login');
+      } else {
+        console.log(error);
+      }
       console.log(error);
       console.log(error.response.data);
     } finally {

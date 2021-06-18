@@ -13,6 +13,7 @@ import {
   Label,
   ApiWrapper,
 } from './styles';
+import { useHistory } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const classes = useStyles();
@@ -27,6 +28,7 @@ const Settings: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [successMsg, setSuccessMsg] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<boolean>(false);
+  const history = useHistory();
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -46,14 +48,20 @@ const Settings: React.FC = () => {
       });
 
       setFormData({
-        maxProfit: data.maxProfit / 100,
-        minProfit: data.minProfit / 100,
+        maxProfit: data.maxProfit,
+        minProfit: data.minProfit,
         steamApiKey: data.steamApiKey || '',
         ping: data.ping || 60,
         test: data.test || 60,
         getMoney: data.getMoney || 60,
       });
     } catch (error) {
+      if (error.response.data.statusCode === 401) {
+        localStorage.setItem('token', 'null');
+        history.push('/login');
+      } else {
+        console.log(error);
+      }
       console.log(error);
     }
   };
@@ -66,8 +74,8 @@ const Settings: React.FC = () => {
       const token = localStorage.getItem('token');
       const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/edit/settings`,
         JSON.stringify({
-          maxProfit: Number(formData.maxProfit) * 100,
-          minProfit: Number(formData.minProfit) * 100,
+          maxProfit: Number(formData.maxProfit),
+          minProfit: Number(formData.minProfit),
           steamApiKey: formData.steamApiKey,
           ping: Number(formData.ping),
           test: Number(formData.test),

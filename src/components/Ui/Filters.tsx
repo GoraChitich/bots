@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core';
 import { filterNames } from './FilterNames';
+import dayjs from 'dayjs';
 
 const useStyles = makeStyles({
   container: {
@@ -71,8 +72,18 @@ const calculateItem = (items: any, field: string, value: string) => {
   // eslint-disable-next-line
   for (let i = 0; i < items.length; i++) {
     // eslint-disable-next-line
+    if (field === 'hold') {
+      if (value === 'hold') {
+        if (dayjs(items[i].holdOff || '') >= dayjs()) { count += 1; }
+      } else if (value === 'notathold') {
+        if (dayjs(items[i].holdOff) < dayjs()) { count += 1; }
+      } else if (value === 'nodatehold') {
+        if (items[i].holdOff === null) { count += 1; }
+      }
+    }
     // @ts-ignore
-    if (items[i][field] === filterNames[String(value)] && items[i][field] !== undefined) {
+    if ((items[i][field] === filterNames[String(value)] || items[i][field] === value)
+      && items[i][field] !== undefined) {
       count += 1;
     }
   }
@@ -81,7 +92,7 @@ const calculateItem = (items: any, field: string, value: string) => {
 };
 
 const Filters: React.FC<any> = ({
-  items, setFilteredItems, filteredItems, fetchItems, filter, setFilter,
+  items, setFilteredItems, filteredItems, fetchItems, filter, setFilter, accountSeller,
 }) => {
   const classes = useStyles();
   const [allPlace, setAllPlace] = useState(true);
@@ -107,7 +118,43 @@ const Filters: React.FC<any> = ({
   const [hold, setHold] = useState({
     notathold: false,
     hold: false,
+    nodatehold: false,
   });
+
+  useEffect(() => {
+    let isAll = true;
+    for (const key in place) {
+      // @ts-ignore
+      if (place[key]) {
+        isAll = false;
+        break;
+      }
+    }
+    setAllPlace(isAll);
+    changeFiter('place', 'all', isAll);
+
+    isAll = true;
+    for (const key in status) {
+      // @ts-ignore
+      if (status[key]) {
+        isAll = false;
+        break;
+      }
+    }
+    setAllStatus(isAll);
+    changeFiter('status', 'all', isAll);
+
+    isAll = true;
+    for (const key in hold) {
+      // @ts-ignore
+      if (hold[key]) {
+        isAll = false;
+        break;
+      }
+    }
+    setAllHold(isAll);
+    changeFiter('hold', 'all', isAll);
+  }, [place, status, hold]);
 
   const changeFiter = (folder: string, part: string, value: boolean) => {
     const _filter = { ...filter };
@@ -141,22 +188,6 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerStatusChange = () => {
-    // if (
-    //   status.new
-    //   || status.notatsteam
-    //   || status.offered
-    //   || status.partly
-    //   || status.ready
-    //   || status.selled
-    //   || status.needtosend
-    //   || status.send
-    //   || status.sent
-    //   || status.wait
-    // ) {
-    //   changeFiter('status', 'all', false);
-    //   changeFiter('status', 'all', false);
-    //   setAllStatus(false);
-    // } else {
     const newAll = !filter.status.all;
     if (newAll) {
       status.new = false;
@@ -177,14 +208,11 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerHoldChange = () => {
-    // if (hold.hold || hold.notathold) {
-    //   changeFiter('hold', 'all', false);
-    //   setAllHold(false);
-    // } else {
     const newAll = !filter.hold.all;
     if (newAll) {
       hold.hold = false;
       hold.notathold = false;
+      hold.nodatehold = false;
     }
     changeFiter('hold', 'all', newAll);
     setAllHold(newAll);
@@ -193,8 +221,8 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerChangePlace = (event: any) => {
-    setAllPlace(false);
-    changeFiter('place', 'all', false);
+    // setAllPlace(isAll);
+    // changeFiter('place', 'all', isAll);
 
     setPlace({ ...place, [event.target.name]: event.target.checked });
     changeFiter('place', event.target.name, event.target.checked);
@@ -204,8 +232,8 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerChangeStatus = (event: any) => {
-    setAllStatus(false);
-    changeFiter('status', 'all', false);
+    // setAllStatus(false);
+    // changeFiter('status', 'all', false);
     changeFiter('status', event.target.name, event.target.checked);
 
     setStatus({ ...status, [event.target.name]: event.target.checked });
@@ -215,8 +243,8 @@ const Filters: React.FC<any> = ({
   };
 
   const handlerChangeHold = (event: any) => {
-    setAllHold(false);
-    changeFiter('hold', 'all', false);
+    // setAllHold(false);
+    // changeFiter('hold', 'all', false);
     changeFiter('hold', event.target.name, event.target.checked);
 
     setHold({ ...hold, [event.target.name]: event.target.checked });
@@ -227,24 +255,7 @@ const Filters: React.FC<any> = ({
   return (
     <div className={classes.container}>
       <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel className={classes.formLabelFirst}>Total: {items.length}</FormLabel>
-        {/* <FormGroup className={classes.formGroup}>
-          <FormControlLabel
-            className={classes.formControlLabel}
-            value={`All(${items.length})`}
-            control={(
-              <Checkbox
-                checked={allPlace}
-                color="primary"
-                name="all"
-                className={classes.checkbox}
-                onChange={handlerChangeAll}
-              />
-            )}
-            label={`All(${items.length})`}
-            labelPlacement="end"
-          />
-        </FormGroup> */}
+        <FormLabel className={classes.formLabelFirst}>Total: {accountSeller ? calculateItem(items, 'accountSeller', accountSeller.trim()) : items.length}</FormLabel>
       </FormControl>
 
       <FormControl component="fieldset" className={classes.formControl}>
@@ -252,7 +263,7 @@ const Filters: React.FC<any> = ({
         <FormGroup className={classes.formGroup}>
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`All(${items.length})`}
+            value={`All(${filteredItems.length})`}
             control={(
               <Checkbox
                 checked={allPlace}
@@ -262,7 +273,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerChangeAll}
               />
             )}
-            label="All"
+            label={`All(${filteredItems.length})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -317,7 +328,7 @@ const Filters: React.FC<any> = ({
         <FormGroup className={classes.formGroup}>
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`All(${items.length})`}
+            value={`All(${filteredItems.length})`}
             control={(
               <Checkbox
                 checked={allStatus}
@@ -327,7 +338,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerStatusChange}
               />
             )}
-            label="All"
+            label={`All(${filteredItems.length})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -472,7 +483,7 @@ const Filters: React.FC<any> = ({
         <FormGroup className={classes.formGroup}>
           <FormControlLabel
             className={classes.formControlLabel}
-            value={`All(${items.length})`}
+            value={`All(${filteredItems.length})`}
             control={(
               <Checkbox
                 checked={allHold}
@@ -482,7 +493,7 @@ const Filters: React.FC<any> = ({
                 onChange={handlerHoldChange}
               />
             )}
-            label="All"
+            label={`All(${filteredItems.length})`}
             labelPlacement="end"
           />
           <FormControlLabel
@@ -513,6 +524,21 @@ const Filters: React.FC<any> = ({
               />
             )}
             label={`Hold(${calculateItem(filteredItems, 'hold', 'hold')})`}
+            labelPlacement="end"
+          />
+          <FormControlLabel
+            className={classes.formControlLabel}
+            value={`nodatehold(${calculateItem(filteredItems, 'hold', 'nodatehold')})`}
+            control={(
+              <Checkbox
+                checked={hold.nodatehold}
+                color="primary"
+                name="nodatehold"
+                className={classes.checkbox}
+                onChange={handlerChangeHold}
+              />
+            )}
+            label={`No date(${calculateItem(filteredItems, 'hold', 'nodatehold')})`}
             labelPlacement="end"
           />
         </FormGroup>

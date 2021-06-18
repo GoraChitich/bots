@@ -28,6 +28,12 @@ export const AccountsContextProvider: React.FC = ({ children }) => {
       });
       setAccounts(data);
     } catch (error) {
+      if (error.response.data.statusCode === 401) {
+        localStorage.setItem('token', 'null');
+        history.push('/login');
+      } else {
+        console.log(error);
+      }
       console.log(error);
     }
   };

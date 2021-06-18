@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Switch, makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   switch: {
@@ -16,6 +17,7 @@ const useStyles = makeStyles({
 const StyledSwitch: React.FC<{id: string, checked: boolean}> = ({ id, checked }) => {
   const classes = useStyles();
   const [enabled, setEnabled] = useState<boolean>(checked);
+  const history = useHistory();
 
   const handleChange = async () => {
     setEnabled(!enabled);
@@ -30,6 +32,12 @@ const StyledSwitch: React.FC<{id: string, checked: boolean}> = ({ id, checked })
           },
         });
     } catch (error) {
+      if (error.response.data.statusCode === 401) {
+        localStorage.setItem('token', 'null');
+        history.push('/login');
+      } else {
+        console.log(error);
+      }
       console.log(error);
     }
   };

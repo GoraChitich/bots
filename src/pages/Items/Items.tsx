@@ -17,6 +17,7 @@ import {
 import { AccountsContext } from 'context/accounts';
 import mockup from './mockup.json';
 import dayjs from 'dayjs';
+import { useHistory } from 'react-router-dom';
 
 const Items: React.FC = () => {
   const { accounts } = useContext(AccountsContext);
@@ -31,6 +32,13 @@ const Items: React.FC = () => {
   const [accountSeller, setAccountSeller] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [searchString, setSearchString] = useState<string>('');
+  const history = useHistory();
+
+  useEffect(() => {
+    getItems();
+    const interval = setInterval(getItems, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   // comparing two array: new and old
   const compareArrays = (arr1: any, arr2: any): boolean => {
@@ -58,7 +66,12 @@ const Items: React.FC = () => {
       });
       setNewData(data);
     } catch (error) {
-      console.log(error);
+      if (error.response.data.statusCode === 401) {
+        localStorage.setItem('token', 'null');
+        history.push('/login');
+      } else {
+        console.log(error);
+      }
     }
 
     // const data = mockup;
@@ -73,10 +86,7 @@ const Items: React.FC = () => {
     // setCounter(counter + 1);
     console.log(newData);
     const _newData = [...newData];
-    // setCounter(counter + 1);
-    // if (counter % 2 === 0) {
-    //   _newData.shift();
-    // }
+    setCounter(counter + 1);
     // console.log(_newData.length);
     if (!compareArrays(_newData, items)) {
       setItems(_newData);
@@ -88,6 +98,7 @@ const Items: React.FC = () => {
 
   useEffect(() => {
     let _items = [...items];
+    console.log(filter);
     for (const kFilter in filter) {
       // @ts-ignore
       if (filter[kFilter].all === true) {
@@ -108,7 +119,22 @@ const Items: React.FC = () => {
         }
       }
       if (arrFind.length) {
-        _items = _items.filter((item: any) => arrFind.includes(item[kFilter]));
+        if (arrFind.includes('hold') || arrFind.includes('notathold') || arrFind.includes('nodatehold')) {
+          _items = _items.filter((item: any) => {
+            if (arrFind.includes('hold') && dayjs(item.holdOff) >= dayjs()) return true;
+            if (arrFind.includes('notathold') && dayjs(item.holdOff) < dayjs()) return true;
+            if (arrFind.includes('nodatehold') && item.holdOff === null) return true;
+            return false;
+          });
+          // _items = _items.filter((item: any) => {
+          //     const arrCurrent = [];
+          //     if(item[kFilter] >= new Date()) arrCurrent.push('hold');
+          //     if(item[kFilter] < new Date()) arrCurrent.push('notathold');
+          //     arrFind.includes(item[kFilter])}
+          //   );
+        } else {
+          _items = _items.filter((item: any) => arrFind.includes(item[kFilter]));
+        }
       }
     }
     if (accountSeller) {
@@ -139,24 +165,8 @@ const Items: React.FC = () => {
       );
     }
 
-    setFilteredItems(_items);
-  }, [filter, accountSeller, dateRange, searchString]);
-
-  useEffect(() => {
-    getItems();
-    const interval = setInterval(getItems, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const optionsArray = accounts.map((item: any) => ({ title: item.login, value: item.login }));
-    setOptions(optionsArray);
-  }, [accounts]);
-
-  useEffect(() => {
-    const _filteredItems = [...filteredItems];
     for (const k in sort) {
-      _filteredItems.sort((a, b) => {
+      _items.sort((a, b) => {
         let a1: any = a[k];
         let b1: any = b[k];
         if (k === 'holdOff' || k === 'createdDate') {
@@ -167,8 +177,14 @@ const Items: React.FC = () => {
         return (sort[k] === 'asc' ? 1 : -1) * (a1 - b1);
       });
     }
-    setFilteredItems(_filteredItems);
-  }, [sort]);
+
+    setFilteredItems(_items);
+  }, [filter, accountSeller, dateRange, searchString, sort, items]);
+
+  useEffect(() => {
+    const optionsArray = accounts.map((item: any) => ({ title: item.login, value: item.login }));
+    setOptions(optionsArray);
+  }, [accounts]);
 
   return (
     <Container>
@@ -212,6 +228,7 @@ const Items: React.FC = () => {
         setDateRange={setDateRange}
         searchString={searchString}
         setSearchString={setSearchString}
+        accountSeller={accountSeller}
       />
     </Container>
   );

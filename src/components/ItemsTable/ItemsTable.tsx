@@ -42,6 +42,7 @@ const ItemsTable: React.FC<any> = ({
   setDateRange,
   searchString,
   setSearchString,
+  accountSeller,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
@@ -107,6 +108,7 @@ const ItemsTable: React.FC<any> = ({
           filteredItems={filteredItems}
           setFilteredItems={setFilteredItems}
           fetchItems={getItems}
+          accountSeller={accountSeller}
         />
         <Table className={classes.table} size="small" aria-label="a dense table">
           <TableHead className={classes.tableHead}>
@@ -313,7 +315,8 @@ const ItemsTable: React.FC<any> = ({
                         <a
                           target="_blank"
                           rel="noreferrer"
-                          href={`https://market.csgo.com/item/${row.tmId}`}
+                          // href={`https://market.csgo.com/item/${row.tmId}`}
+                          href={`https://market.csgo.com/item/${row.classId}-${row.instanceId}/`}
                         >
                           {row.hashName}
                         </a>
