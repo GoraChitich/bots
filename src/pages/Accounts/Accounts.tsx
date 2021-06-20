@@ -13,7 +13,8 @@ import {
 import { AccountsContext } from 'context/accounts';
 
 const Accounts: React.FC = () => {
-  const { accounts } = useContext(AccountsContext);
+  // @ts-ignore
+  const { accounts, setAccounts } = useContext(AccountsContext);
   const [open, setOpen] = useState<boolean>(false);
   const [rows, setRows] = useState([]);
 
@@ -47,6 +48,7 @@ const Accounts: React.FC = () => {
         open={open}
         setOpen={setOpen}
         bots={rows}
+        setAccounts={setAccounts}
       />
     </Container>
   );

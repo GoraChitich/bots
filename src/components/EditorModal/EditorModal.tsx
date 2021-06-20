@@ -21,9 +21,14 @@ interface Props {
   open: boolean
   setOpen: (arg0: boolean) => void
   bots: any[]
+  setAccounts: (arg0: any) => void
 }
 
-const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
+const EditorModal: React.FC<Props> = (
+  {
+    open, setOpen, bots, setAccounts,
+  },
+) => {
   const classes = useStyles();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [botsString, setBotsString] = useState<string>('');
@@ -32,14 +37,12 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
   const formatBots = () => {
     console.log(bots);
     const newBots = bots.map((bot: any) => ({
-      // id: bot.id,
-      // balance: bot.balance,
       comment: bot.comment,
-      // enabled: bot.enabled,
       login: bot.login,
       password: bot.password,
       steam_id: bot.steam_id,
       shared_secret: bot.shared_secret,
+      identity_secret: bot.identity_secret,
       indentity_secret: bot.indentity_secret,
       steam_api: bot.steam_api,
       tm_api: bot.tm_api || null,
@@ -63,6 +66,14 @@ const EditorModal: React.FC<Props> = ({ open, setOpen, bots }) => {
             'Content-Type': 'text/plain',
           },
         });
+
+      const result = await axios.get(`${process.env.REACT_APP_SERVER}/getSellerAccounts`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      setAccounts(result.data);
+
       setOpenConfirm(false);
       setOpen(false);
     } catch (error) {
